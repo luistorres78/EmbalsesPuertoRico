@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+        <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<link rel="shortcut icon" type="image/x-icon" href="docs/images/favicon.ico" />
+    <link rel="stylesheet" href="style_proyecto.css" />
+    <link rel="stylesheet" href="embalse/embalse.css" />
+    <link rel="stylesheet" href="leaflet/leaflet.css"/>
+    <script type="text/javascript" src="leaflet/leaflet.js"></script>
+    <script type="text/javascript" src="jquery/jquery-3.2.1.js"></script>
+    <script type="text/javascript" src="embalse/embalse.js"></script>
+    <script type="text/javascript" src="d3/d3.js"></script>
+    <script type="text/javascript" src="spin/spin.min.js"></script>
+    <link rel="stylesheet" href="style_proyecto.css" />
+    <style>
+        svg{
+        border-radius: 5px; 
+        position: relative;
+        margin:auto;
+        display: block;
+        text-align: center;
+        z-index: 4;
+    }
+    </style>
+    
+    <title>Niveles de los embalses en Puerto Rico </title>
+	</head>
+    <H1> EL ESTADO DE LOS EMBALSES EN PUERTO RICO </H1>
+	<body>
+    
+    
+
+<!-- MENU DE PAGINAS -->
+
+    <div id = "menu">
+        <div class = "contieneBoton">
+            <div class="button1" onclick="location.href='mapa_embalses.html';"><img class = "button" src="images/search.png"> </div>
+        </div>
+
+        <div class = "contieneBoton">
+            <div class = "button2" onclick="location.href='embalses_tablamax.html';" ><img class = "button" src="images/table-grid.png"> </div>
+        </div>
+        
+        <div class = "contieneBoton" class="button3">
+            <div class = "button3" onclick="location.href='grafico_barras_embalse.html';" ><img class = "button" src="images/profits.png"> </div>
+        </div>
+    </div>
+
+        
+<!--------------------->
+    
+    <h2> Gráfica del nivel (en metros sobre el nivel del mar) de los embalses en Puerto Rico. </h2>    
+    <br>
+    <div id="graficoBarras"></div>
+    <script type="text/javascript">
+        var opts = {
+                      lines: 13, // The number of lines to draw
+                      length: 0, // The length of each line
+                      width: 17, // The line thickness
+                      radius: 45, // The radius of the inner circle
+                      scale: 1.4, // Scales overall size of the spinner
+                      corners: 1, // Corner roundness (0..1)
+                      color: '#00fcff', // CSS color or array of colors
+                      fadeColor: 'transparent', // CSS color or array of colors
+                      speed: 1.2, // Rounds per second
+                      rotate: 41, // The rotation offset
+                      animation: 'spinner-line-fade-quick', // The CSS animation name for the lines
+                      direction: 1, // 1: clockwise, -1: counterclockwise
+                      zIndex: 2e9, // The z-index (defaults to 2000000000)
+                      className: 'spinner', // The CSS class to assign to the spinner
+                      top: 'auto', // Top position relative to parent
+                      left: 'auto', // Left position relative to parent
+                      shadow: '0 0 1px transparent', // Box-shadow for the lines
+                      position: 'relative' // Element positioning
+                    };
+
+            var target = document.getElementById('graficoBarras');
+            var spinner = new Spinner(opts).spin(target);
+        
+        // ARREGLO 
+        var embalses = [
+	        ["50059000", 18.32791, -66.01628, 41.14, 39.5,38.5,36.5,30],
+    		["50045000", 18.343, -66.23607, 51,43,39,38,31],
+    		["50047550", 18.1969, -66.14072, 403.05,401.05,400.05,399.05,398.05],
+    		["50093045", 18.01774, -66.0185, 67.07,66.16,64.33,60.52,59.45],
+			["50111210", 18.10166, -66.48902,161,152,145,139,133],
+			["50039995", 18.07524,-66.10683,544,542,539,537,536],
+    		["50076800", 18.22389, -65.78142,28.75,26.5,24.25,22.5,18],
+    		["50026140", 18.27654, -66.65642,252,248,244,242,235],
+    		["50071225", 18.2969, -65.65858, 52.5,48.3,43.4,37.5,26,4430],
+			["50010800", 18.39836,-66.9227,196,194,190,186,184],
+			["50113950", 18.07703, -66.57547, 173.4,160,155.5,149.4,137.2]
+	       ];
+			
+            //****************
+            // Tamano del SVG*
+            //****************
+
+			var w = screen.width * 0.6;
+			var h = 450;
+			var barPadding = 20;
+			var nombres = [];
+			
+            //*************************
+            // Niveles de los embalses*
+            //*************************
+            
+
+            var medida  = [];
+
+            var embalse;
+
+            var dataset = [];
+            var niveles = [];
+            
+            //****************************
+            // Leer datos de los embalses*
+            //****************************
+        
+            var queue = d3.queue();
+
+            for(var i = 0; i < 11; i++)
+                queue.defer(d3.text, urlEmbalse(embalses[i][0]));
+
+            queue.awaitAll(function(error, results){
+                // Comenzar loader
+                 //<div class="loader"></div> 
+                for(var i = 0; i < 11; i++)
+                {
+                    
+                    niveles[i] = filtraDatos(results[i]);
+                    
+                    medida[i] = getLevel(niveles[i]);
+                    
+                   var scale = d3.scaleLinear()
+                                 .domain([embalses[i][7],embalses[i][3 ]])
+                                 .range([0,100]);
+                    
+
+                   // anadir datos normalizados a arreglo de dataset  
+		          nombres.push(regresaNombre(embalses[i][0]));
+                   dataset.push(scale(medida[i]));
+                    
+                }
+        
+                //************************
+                // Especificacion del SVG*
+                //************************
+
+			    var svg =  d3.select("body")
+			  	    		.append("svg")
+						    .attr("width", w)
+						    .attr("height", h);
+
+                //*******************
+                // Grafico de Barras*
+                //*******************
+                
+			svg.selectAll("rect")
+			   .data(dataset)
+			   .enter()
+			   .append("rect")
+			   .attr("x", function(d, i) {
+			   		return i * (w / 11);
+			   })
+			   .attr("y", function(d) {
+			   		return h - (d * 4.31);
+			   })
+			   .attr("width", w / 11 - barPadding)
+			   .attr("height", function(d) {
+			   		return d * 4.31;
+			   })
+			   .attr("fill", function(d, i) {
+                    //alert(embalses[i]);
+					if(medida[i] >= embalses[i][3])
+                        return "lightblue";
+                    else if(medida[i] >= embalses[i][4])
+                        return "green";
+                    else if(medida[i] >= embalses[i][5])
+                        return "blue";
+                    else if(medida[i] >= embalses[i][6])
+                        return "yellow";
+                    else if(medida[i] == 0 || medida[i] == null)
+                        return "gray";
+                    else
+                        return "orange";
+			   });
+                
+                //***********************
+                // Barras de referencia *
+                //***********************
+                
+                svg.selectAll("svg")
+			   .data(embalses)
+			   .enter()
+			   .append("rect")
+			   .attr("x", function(d, i) {
+			   		return i * (w / 11);
+			   })
+			   .attr("y", 0)
+			   .attr("width", w / 11 - barPadding)
+			   .attr("height", function(d) {
+			   		return h;
+			   })
+                .attr("stroke", "black")
+			   .attr("fill", "none");
+                
+                //*******************
+                // Texto de medidas * 
+                //*******************
+                
+			svg.selectAll("svg")
+			   .data(medida)
+			   .enter()
+			   .append("text")
+			   .text(function(d) {
+			   		return d;
+			   })
+			   .attr("x", function(d, i) {
+			   		return i * (w / 11) + 10;
+			   })
+			   .attr("y", function(d) {
+                        return h - 11;
+                })
+			   .attr("font-family", "sans-serif")
+			   .attr("font-size", "11px")
+			   .attr("fill", "black");
+                
+                //*************************
+                // Nombre de los embalses *
+                //*************************
+			svg.selectAll("svg")
+			   .data(nombres)
+			   .enter()
+			   .append("text")
+			   .text(function(d) {
+			   		return d;
+			   })
+			   .attr("x", function(d, i) {
+			   		return i * (w / 11) + 5;
+			   })
+			   .attr("y", function(d) {
+			   		return 20;
+			   })
+			   .attr("font-family", "sans-serif")
+			   .attr("font-size", "11px")
+			   .attr("fill", "black");
+                
+            spinner.stop(target);
+            });
+			
+		</script>
+	</body>
+</html>

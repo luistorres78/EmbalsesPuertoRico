@@ -1,0 +1,254 @@
+    html{
+        background: rgb(12, 48, 83);
+        font-family: 'Arial Narrow', sans-serif;
+    }
+
+    body{
+        width: 80%;
+        margin: auto;
+    }
+
+	h1{
+        margin: auto;
+		background: rgb(28, 81, 135);
+		color: white;
+		width: auto;
+		text-align: center;
+		border-radius: 5px;
+		padding-top: 10px;
+		padding-bottom: 10px;
+	}
+    	
+	div.marker{
+		width:89px;
+		height:100px;
+	}
+
+    h2{
+    width: 100%;
+    height: auto;
+    background: lightgray;
+    border-radius: 5px;
+    text-align: center;
+    min-height: 40px;
+    padding-top: 10px;
+}
+
+
+img.button{
+    width: auto;
+    height: auto;
+    margin: 43px;
+}
+
+#menu{
+    margin-top: 10px;
+    height: 150px;
+    width: 100%;
+    display: block;
+    margin-top: 50px;
+    margin-bottom: 50px; 
+}
+div.contieneBoton{
+    width: 33.33%;
+    height: auto;
+    float: left;
+}
+
+    .button1{
+        box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2), 0 6px 20px 0 rgba(0,0,0,0.19);
+        height: 150px;
+        width:150px;
+        border-radius: 100%;
+        background: rgb(65, 160, 211);
+        border:solid;
+        cursor: pointer;
+        margin: 0 auto;
+    }
+    .button2{
+        box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2), 0 6px 20px 0 rgba(0,0,0,0.19);
+        height: 150px;
+        width:150px;
+        border-radius: 100%;
+        background: rgb(114, 214, 192);
+        border:solid;
+        cursor: pointer;
+        margin: 0 auto;
+    }
+    .button3{
+        box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2), 0 6px 20px 0 rgba(0,0,0,0.19);
+        height: 150px;
+        width:150px;
+        border-radius: 100%;
+        background: rgb(238, 207, 89);
+        border:solid;
+        cursor: pointer;
+        margin: 0 auto;
+        
+    }
+
+	div.nombre{
+		margin-top: 10px;
+		padding-top: auto;
+		background: white;
+		border: none;
+		border-radius: 10px;
+		text-align: center;
+	}
+	
+	img{
+		margin-left: auto;
+		margin-right: auto;
+		display:block;
+		height:15px;
+		width:15px;
+	}
+
+	div.barraIcono{
+	margin: 0px;
+
+	}
+	
+	div.barraRef{
+		background: #e5e7e9;
+		margin-left: auto;
+		margin-right: auto;
+		margin-top: 10px;
+		height:43px;
+		width: 7px;
+		border: solid;
+		}
+
+	div.grafico{
+		margin-top: 20px;
+	}
+
+	div.linea{
+        margin: auto;
+		padding: 5px;
+		position: relative;
+		margin-top: 50px;
+		width: auto;
+        max-width: 1000px;
+		height: 315px;
+		background: gold;
+		border-radius: 15px;
+		overflow: hidden;
+	}
+
+	div.foto1{
+		position:absolute;
+		padding: 5px;
+		height: 305px;
+		width:47%;
+		border-radius:5px;
+		background: white;
+		float: left;
+		z-index: 0;
+	}
+	div.foto2{
+		position: relative;
+		margin-left: auto;
+		padding:5px;
+		width:47%;
+		height:305px;
+		border-radius:5px;
+		background: white;
+		overflow: hidden;
+		z-index: 0;
+	
+	}
+	
+	img.embalse{
+		position: absolute;
+		z-index: 1;
+		border-radius: 5px;
+        width: 97%;
+		max-width: 474.69px;
+		height: 305px;
+	}
+
+	.titulo{
+		position: absolute;
+		border-radius: 5px;
+		font-size: 40px;
+		width: auto;
+		opacity: .6;
+		top: auto;
+		background: black;
+		color: white;
+		text-align: center;
+		z-index: 2;
+	}
+	
+	.foo {
+		background-color: #98FB98;
+        margin: auto;
+		position: absolute;
+		opacity: .7;
+		width: 50px;
+		height: 0px;
+		top: 200px;
+		z-index: 4;
+	}
+	.barra{
+		position: absolute;
+        top: 57.5px;
+		left: 214.345px;
+		z-index: 4;
+		height: 200px;
+		width:50px;
+		border: solid;
+
+	}
+	button{
+		top:275.367px; 
+		left: 221.345px;
+		position: absolute;
+		border-radius: 5px;
+		background: greenyellow;
+		z-index: 4;
+        cursor: pointer; 
+	}
+    
+
+#tablaNiveles{
+    width: auto;
+    top:70%;
+    left:50%;
+    position: fixed;
+}
+#graficoBarras{
+    width: auto;
+    top:70%;
+    left:50%;
+    position: fixed;
+    
+}
+
+svg{
+    background: white;
+}
+
+#leyenda{
+    margin-top:10px;
+    height: 21px;
+    width: 100%;
+    display: block;
+    background: lightgray;
+    align-content: center;
+    
+}
+
+#contieneleyenda{
+    width: 20%;
+    height: auto;
+    float: left;
+    margin: 0 auto;
+}
+#contienecolor{
+    width: 20px;
+    height: 20px;
+    border: 1px solid;
+    float: left;
+}

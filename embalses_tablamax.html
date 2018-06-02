@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html>
+	<head>
+        <meta charset="UTF-8" />
+        <link rel="stylesheet" href="style_proyecto.css" />
+        <title>Estado de los embalses en Puerto Rico</title>
+	<meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<link rel="shortcut icon" type="image/x-icon" href="docs/images/favicon.ico" />
+    <link rel="stylesheet" href="style_proyecto.css" />
+    <link rel="stylesheet" href="embalse/embalse.css" />
+    <script type="text/javascript" src="leaflet/leaflet.js"></script>
+    <script type="text/javascript" src="jquery/jquery-3.2.1.js"></script>
+    <script type="text/javascript" src="d3/d3.js"></script>
+    <script type="text/javascript" src="embalse/embalse.js"></script>
+    <script type="text/javascript" src="spin/spin.min.js"></script>
+	</head>
+
+	<body>
+	
+    <style>
+
+        table{
+            margin: auto;
+            width: 100%;
+            border: 1px solid white;
+            border-radius: 5px;
+        }
+        tr, td
+        {
+            font-size: 20px;
+            background: white;
+            height: 50px;
+            width: 50px;
+            text-align: center;
+        }
+        
+    </style>
+    <H1> EL ESTADO DE LOS EMBALSES EN PUERTO RICO </H1>
+    <!-- MENU DE PAGINAS -->
+
+    <div id = "menu">
+        <div class = "contieneBoton">
+            <div class="button1" onclick="location.href='mapa_embalses.html';"><img class = "button" src="images/search.png"> </div>
+        </div>
+
+        <div class = "contieneBoton">
+            <div class = "button2" onclick="location.href='embalses_tablamax.html';" ><img class = "button" src="images/table-grid.png"> </div>
+        </div>
+        
+        <div class = "contieneBoton" class="button3">
+            <div class = "button3" onclick="location.href='grafico_barras_embalse.html';" ><img class = "button" src="images/profits.png"> </div>
+        </div>
+    </div>
+
+        
+<!--------------------->
+    <h2> Tabla de embalses y sus niveles actuales(metros) </h2> 
+<div id="tablaNiveles">
+<script>
+// Especificaciones para spinner
+var opts = {
+  lines: 13, // The number of lines to draw
+  length: 0, // The length of each line
+  width: 17, // The line thickness
+  radius: 45, // The radius of the inner circle
+  scale: 1.4, // Scales overall size of the spinner
+  corners: 1, // Corner roundness (0..1)
+  color: '#00fcff', // CSS color or array of colors
+  fadeColor: 'transparent', // CSS color or array of colors
+  speed: 1.2, // Rounds per second
+  rotate: 41, // The rotation offset
+  animation: 'spinner-line-fade-quick', // The CSS animation name for the lines
+  direction: 1, // 1: clockwise, -1: counterclockwise
+  zIndex: 2e9, // The z-index (defaults to 2000000000)
+  className: 'spinner', // The CSS class to assign to the spinner
+  top: '100px', // Top position relative to parent
+  left: 'auto', // Left position relative to parent
+  shadow: '0 0 1px transparent', // Box-shadow for the lines
+  position: 'relative' // Element positioning
+};
+
+var target = document.getElementById('tablaNiveles');
+var spinner = new Spinner(opts).spin(target); // Activar Spinner
+    
+    
+    var embalses = [
+	        ["50059000", 18.32791, -66.01628, 41.14, 39.5,38.5,36.5,30],
+    		["50045000", 18.343, -66.23607, 51,43,39,38,31],
+    		["50047550", 18.1969, -66.14072, 403.05,401.05,400.05,399.05,398.05],
+    		["50093045", 18.01774, -66.0185, 67.07,66.16,64.33,60.52,59.45],
+			["50111210", 18.10166, -66.48902,161,152,145,139,133],
+			["50039995", 18.07524,-66.10683,544,542,539,537,536],
+    		["50076800", 18.22389, -65.78142,28.75,26.5,24.25,22.5,18],
+    		["50026140", 18.27654, -66.65642,252,248,244,242,235],
+    		["50071225", 18.2969, -65.65858, 52.5,48.3,43.4,37.5,26,4430],
+			["50010800", 18.39836,-66.9227,196,194,190,186,184],
+			["50113950", 18.07703, -66.57547, 173.4,160,155.5,149.4,137.2]
+	       ];
+    
+    var medida  = [];
+    var dataset = [];
+    var datos_tabla = [];
+
+    var queue = d3.queue();
+
+    for(var i = 0; i < 11; i++)
+        queue.defer(d3.text, urlEmbalse(embalses[i][0]));
+    
+    function tabulate(data, columns) {
+        
+		var table = d3.select('body').append('table')
+		var thead = table.append('thead')
+		var	tbody = table.append('tbody');
+
+		// append the header row
+		thead.append('tr')
+		  .selectAll('th')
+		  .data(columns).enter()
+		  .append('th')
+		    .text(function (column) { return column; });
+
+		// create a row for each object in the data
+		var rows = tbody.selectAll('tr')
+		  .data(data)
+		  .enter()
+		  .append('tr');
+
+		// create a cell in each row for each column
+		var cells = rows.selectAll('td')
+		                .data(function (row) {
+		                      return columns.map(function (column) {
+		                      return {column: column, value: row[column]};
+		                      });
+		                      })
+		                  .enter()
+		              .append('td')
+		              .text(function (d) { return d.value; })
+                      .style("background", function(d, i){
+                          if(i == 0)
+                              return "#DAF7A6";
+                          else if (i == 1)
+                              return "#FFA07A";
+                          if(i == 2)
+                          {
+                              if(d.value == "Desborde")
+                                  return "lightblue";
+                              else if(d.value == "Seguridad")
+                                  return "green";
+                              else if(d.value == "Observacion")
+                                  return "blue";
+                              else if(d.value == "Ajuste")
+                                  return "yellow";
+                              else if(d.value == "Control")
+                                  return "orange";
+                              else
+                                  return "gray";
+                          };
+                          
+                      })
+    
+                    
+	  return table;
+	}
+    
+    queue.awaitAll(function(error, results){
+		for(var i = 0; i < 11; i++)
+		{
+			dataset[i] = filtraDatos(results[i]);
+                    
+            datos_tabla[i] = {
+                embalse: regresaNombre(embalses[i][0]),
+                nivel : getLevel(dataset[i]),
+                estado: regresaEstado(embalses[i], dataset[i])
+            };
+            
+            
+        }
+       spinner.stop(target);
+        tabulate(datos_tabla, ['embalse', 'nivel', 'estado']);
+            
+    });
+    
+    
+        </script>
+        </div>
+	</body>
+</html>
